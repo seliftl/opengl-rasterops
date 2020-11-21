@@ -138,21 +138,11 @@ private:
                 glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS,
                 glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS,
                 glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS,
-                glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS
+                glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS,
+                glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS,
+                glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS,
+                glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS
             );
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-                if (fov < 1.0f)
-                    fov = 1.0f;
-                else
-                    fov -= 1;
-            }
-                
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-                if (fov > 80.0f)
-                    fov = 80.0f;                
-                else
-                    fov += 1;
-            }
                 
             scene->resize(fbw, fbh, fov);
 

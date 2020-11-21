@@ -1,7 +1,6 @@
 
 #include "cookbookogl.h"
 #include <string>
-#include <glm/glm.hpp>
 
 class Texture {
 public:
@@ -10,5 +9,4 @@ public:
     static GLuint loadHdrCubeMap( const std::string & baseName );
     static unsigned char * loadPixels( const std::string & fName, int & w, int & h, bool flip = true );
     static void deletePixels( unsigned char * );
-
 };

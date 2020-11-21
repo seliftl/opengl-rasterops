@@ -19,6 +19,9 @@ protected:
     float camRotLeft = 0.0f;
 
     vec3 transFront = vec3(0.0f, 0.0f, 0.0f);
+    vec3 transRight = vec3(0.0f, 0.0f, 0.0f);
+
+    bool enableOutlining;
 
 public:
     int width;
@@ -43,24 +46,25 @@ public:
       */
     virtual void update( float t ) = 0;
 
-    virtual void update(float t, bool rotLeft, bool rotRight, bool rotUp, bool rotDown, bool moveFront, bool moveBack)
+    virtual void update(float t, bool rotLeft, bool rotRight, bool rotUp, bool rotDown, bool moveLeft, bool moveRight, bool moveFront, bool moveBack, bool outlining)
     {
+        // check if outlining is enabled
+        enableOutlining = outlining;
+
         // Time is in seconds. Rotate with rpm.
         const float rpm = 4.0f;
         if (last_t == -1.0f) last_t = t;
         float dt = t - last_t;
         last_t = t;
         float angleIncrement = 2 * glm::pi<float>() * rpm * dt / 60.0f;
-        vec3 translationIncrement = vec3(0.0f, 0.0f, 0.001f);
+        vec3 translationIncrementFront = vec3(0.0f, 0.0f, 0.001f);
+        vec3 translationIncrementRight = vec3(0.001f, 0.0f, 0.0f);
 
-        camRotDown = camRotDown
-            - (rotUp ? angleIncrement : 0)
-            + (rotDown ? angleIncrement : 0);
-        camRotLeft = camRotLeft
-            + (rotLeft ? angleIncrement : 0)
-            - (rotRight ? angleIncrement : 0);
+        camRotDown = camRotDown - (rotUp ? angleIncrement : 0) + (rotDown ? angleIncrement : 0);
+        camRotLeft = camRotLeft + (rotLeft ? angleIncrement : 0) - (rotRight ? angleIncrement : 0);
 
-        transFront = transFront + (moveFront ? translationIncrement : vec3(0.0f, 0.0f, 0.0f)) - (moveBack ? translationIncrement : vec3(0.0f, 0.0f, 0.0f));
+        transFront = transFront + (moveFront ? translationIncrementFront : vec3(0.0f, 0.0f, 0.0f)) - (moveBack ? translationIncrementFront : vec3(0.0f, 0.0f, 0.0f));
+        transRight = transRight + (moveRight ? translationIncrementRight : vec3(0.0f, 0.0f, 0.0f)) - (moveLeft ? translationIncrementRight : vec3(0.0f, 0.0f, 0.0f));
     }
 
     /**

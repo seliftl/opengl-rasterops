@@ -46,5 +46,5 @@ void main() {
 
     vec3 BlinnLight = ambient + diffuse + spec;
 
-    FragColor = vec4(BlinnLight, 1.0f);
+    FragColor = vec4(BlinnLight, 0.5f);
 }

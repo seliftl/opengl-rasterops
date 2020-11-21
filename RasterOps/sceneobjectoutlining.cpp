@@ -21,7 +21,7 @@ void SceneObjectOutlining::initScene()
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-    view = glm::lookAt(vec3(0.0f, 1.25f, 1.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view = glm::lookAt(vec3(1.25f, 1.25f, 1.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
     projection = mat4(1.0f);
 
     angle = 0.0;
@@ -49,40 +49,45 @@ void SceneObjectOutlining::update(float t) {
 void SceneObjectOutlining::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-    view = glm::rotate(view, camRotDown, glm::vec3(-1.0f, 0.0f, 0.0f));
-    view = glm::rotate(view, camRotLeft, glm::vec3(0.0f, 1.0f, 0.0f));
+    //view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
+    //view = glm::rotate(view, camRotDown, glm::vec3(-1.0f, 0.0f, 0.0f));
+    //view = glm::rotate(view, camRotLeft, glm::vec3(0.0f, 1.0f, 0.0f));
 
+    // set mask for each pixel of cube
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilMask(0xFF);
 
     prog.setUniform("Material.Kd", 0.0f, 0.21424f, 0.27568f);
     prog.setUniform("Material.Ka", 0.0f, 0.1745f, 0.215f);
     prog.setUniform("Material.Ks", 0.0f, 0.05f, 0.05f);
     prog.setUniform("Material.Shininess", 1.0f);
-    //prog.setUniform("Alpha", 1.0f);
 
     model = mat4(1.0f);    
-    //model = glm::translate(model, glm::vec3(-0.3f, 0.2f, -2.0f));
-    
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilMask(0xFF);
-    setMatrices();
-    cube.render();
 
-    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    glStencilMask(0x00);
     glDisable(GL_DEPTH_TEST);
-
-    prog.setUniform("Material.Kd", 0.8f, 0.21424f, 0.27568f);
-    prog.setUniform("Material.Ka", 0.8f, 0.1745f, 0.215f);
-    prog.setUniform("Material.Ks", 0.5f, 0.05f, 0.05f);
-    prog.setUniform("Material.Shininess", 1.0f);
-    //prog.setUniform("Alpha", 1.0f);
-
-    model = mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
-
     setMatrices();
     cube.render();
+
+    if (enableOutlining) {
+        // write only to pixels where mask is not 1
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+
+        prog.setUniform("Material.Kd", 0.8f, 0.21424f, 0.27568f);
+        prog.setUniform("Material.Ka", 0.8f, 0.1745f, 0.215f);
+        prog.setUniform("Material.Ks", 0.5f, 0.05f, 0.05f);
+        prog.setUniform("Material.Shininess", 1.0f);
+
+        model = mat4(1.0f);
+        model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+        //model = glm::translate(model, transFront);
+        //model = glm::translate(model, transRight);
+
+        setMatrices();
+        cube.render();
+        glEnable(GL_DEPTH_TEST);
+    }
 }
 
 void SceneObjectOutlining::setMatrices()
