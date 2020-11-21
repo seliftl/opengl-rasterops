@@ -14,18 +14,13 @@ using glm::mat4;
 using glm::vec3;
 using glm::vec4;
 
-SceneOit::SceneOit() : angle(0.0f), tPrev(0.0f),
-                       rotSpeed(glm::pi<float>() / 8.0f)
-{ }
+SceneOit::SceneOit() {}
 
 void SceneOit::initScene()
 {
   compileAndLinkShader();
-  animate(false);
-  glClearColor(0.5f,0.5f,0.5f,1.0f);
 
   glEnable(GL_DEPTH_TEST);
-  angle = glm::radians(210.0f);
 
   // get memory objects ready
   initShaderStorage();
@@ -76,6 +71,7 @@ void SceneOit::pass1() {
 
   projection = glm::perspective( glm::radians(50.0f), (float)width/height, 1.0f, 1000.0f);
 
+  // disable writing to depth buffer
   glDepthMask( GL_FALSE );
 
   drawScene();
@@ -84,6 +80,7 @@ void SceneOit::pass1() {
 }
 
 void SceneOit::pass2() {
+    // ensure that dáta is written to buffers
   glMemoryBarrier( GL_SHADER_STORAGE_BARRIER_BIT );
 
   glUniformSubroutinesuiv( GL_FRAGMENT_SHADER, 1, &pass2Index);

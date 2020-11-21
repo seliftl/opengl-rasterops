@@ -1,7 +1,7 @@
 #include "scene.h"
 #include "scenerunner.h"
 #include "scenedepthtest.h"
-#include "scenealphatest.h"
+#include "scenetransparentdepthtest.h"
 #include "sceneobjectoutlining.h"
 #include "sceneoit.h"
 
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 		scene = std::unique_ptr<Scene>(new SceneDepthTest());
 	}
 	else if (recipe == "transparent-depth") {
-		scene = std::unique_ptr<Scene>(new SceneAlphaTest());
+		scene = std::unique_ptr<Scene>(new SceneTransparentDepthTest());
 	}
 	else if (recipe == "oit") {
 		scene = std::unique_ptr<Scene>(new SceneOit());

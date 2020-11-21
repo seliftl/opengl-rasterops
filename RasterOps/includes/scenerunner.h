@@ -141,7 +141,9 @@ private:
                 glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS,
                 glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS,
                 glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS,
-                glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS
+                glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS,
+                glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS,
+                glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS
             );
                 
             scene->resize(fbw, fbh, fov);

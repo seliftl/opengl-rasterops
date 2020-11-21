@@ -13,7 +13,6 @@ private:
     GLSLProgram prog;
 
     Cube cube;
-    float angle;
 
     void setMatrices();
     void compileAndLinkShader();
@@ -27,4 +26,4 @@ public:
     void resize(int, int, float);
 };
 
-#endif // SCENEPERFRAGMENT_H
+#endif // SCENEOBJECTOUTLINING_H

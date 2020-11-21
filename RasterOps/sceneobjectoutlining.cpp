@@ -18,43 +18,31 @@ void SceneObjectOutlining::initScene()
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
     view = glm::lookAt(vec3(1.25f, 1.25f, 1.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
     projection = mat4(1.0f);
 
-    angle = 0.0;
-
-    prog.setUniform("Light.Position", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    prog.setUniform("Light.Position", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
     prog.setUniform("Light.Ld", 1.0f, 1.0f, 1.0f);
     prog.setUniform("Light.La", 0.7f, 0.7f, 0.2f);
     prog.setUniform("Light.Ls", 1.0f, 1.0f, 1.0f);
 
-    // Load texture file
     GLint w, h;
-    //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, texID);
-
 #ifdef __APPLE__
-    // Set the sampler uniform
-    prog.setUniform("Tex1", 0);
 #endif
 }
 
-void SceneObjectOutlining::update(float t) {
-        
-}
+void SceneObjectOutlining::update(float t) {}
 
 void SceneObjectOutlining::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    //view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-    //view = glm::rotate(view, camRotDown, glm::vec3(-1.0f, 0.0f, 0.0f));
-    //view = glm::rotate(view, camRotLeft, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    // set mask for each pixel of cube
+    // all pixels should pass test
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
+
+    // enable writing to stencil buffer
     glStencilMask(0xFF);
 
     prog.setUniform("Material.Kd", 0.0f, 0.21424f, 0.27568f);
@@ -64,15 +52,15 @@ void SceneObjectOutlining::render()
 
     model = mat4(1.0f);    
 
-    glDisable(GL_DEPTH_TEST);
     setMatrices();
     cube.render();
 
     if (enableOutlining) {
-        // write only to pixels where mask is not 1
+        // write only to pixels where mask is not 1 -> spare cube
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+
+        // disable writing to stencil buffer
         glStencilMask(0x00);
-        glDisable(GL_DEPTH_TEST);
 
         prog.setUniform("Material.Kd", 0.8f, 0.21424f, 0.27568f);
         prog.setUniform("Material.Ka", 0.8f, 0.1745f, 0.215f);
@@ -81,12 +69,9 @@ void SceneObjectOutlining::render()
 
         model = mat4(1.0f);
         model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
-        //model = glm::translate(model, transFront);
-        //model = glm::translate(model, transRight);
 
         setMatrices();
         cube.render();
-        glEnable(GL_DEPTH_TEST);
     }
 }
 
@@ -111,11 +96,9 @@ void SceneObjectOutlining::compileAndLinkShader()
 {
     try {
 #ifdef __APPLE__
-        prog.compileShader("shader/texture_41.vs");
-        prog.compileShader("shader/texture_41.fs");
 #else
-        prog.compileShader("shader/texture.vert.glsl");
-        prog.compileShader("shader/texture.frag.glsl");
+        prog.compileShader("shader/basic.vert.glsl");
+        prog.compileShader("shader/basic.frag.glsl");
 #endif
         prog.link();
         prog.use();

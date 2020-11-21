@@ -13,7 +13,6 @@ private:
     GLSLProgram prog;
 
     Cube cube;
-    float angle;
 
     void setMatrices();
     void compileAndLinkShader();

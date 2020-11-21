@@ -1,5 +1,5 @@
-#ifndef SCENEALPHATEST_H
-#define SCENEALPHATEST_H
+#ifndef SCENETRANSPARENTDEPTHTEST_H
+#define SCENETRANSPARENTDEPTHTEST_H
 
 #include "scene.h"
 #include "glslprogram.h"
@@ -7,20 +7,18 @@
 
 #include <glm/glm.hpp>
 
-class SceneAlphaTest : public Scene
+class SceneTransparentDepthTest : public Scene
 {
 private:
     GLSLProgram prog;
 
     Cube cube;
 
-    float angle, tPrev, rotSpeed;
-
     void setMatrices();
     void compileAndLinkShader();
 
 public:
-    SceneAlphaTest();
+    SceneTransparentDepthTest();
 
     void initScene();
     void update( float t );

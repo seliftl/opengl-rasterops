@@ -42,13 +42,9 @@ vec3 material( vec3 position, vec3 n ) {
   return ambient + Light.L*(diffuse + spec);
 }
 
-
-
 void main() {
     if(textureRendering == 1){
-        FragColor = texture( AlphaTex, TexCoord );
-
-       
+        FragColor = texture( AlphaTex, TexCoord );       
     }
     else {
         if( gl_FrontFacing ) {

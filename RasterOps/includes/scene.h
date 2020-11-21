@@ -22,6 +22,7 @@ protected:
     vec3 transRight = vec3(0.0f, 0.0f, 0.0f);
 
     bool enableOutlining;
+    bool setTransparent;
 
 public:
     int width;
@@ -46,10 +47,16 @@ public:
       */
     virtual void update( float t ) = 0;
 
-    virtual void update(float t, bool rotLeft, bool rotRight, bool rotUp, bool rotDown, bool moveLeft, bool moveRight, bool moveFront, bool moveBack, bool outlining)
+    virtual void update(float t, bool rotLeft, bool rotRight, bool rotUp, bool rotDown, bool moveLeft, bool moveRight, bool moveFront, bool moveBack, bool opaque, bool transparent, bool highlight)
     {
         // check if outlining is enabled
-        enableOutlining = outlining;
+        if (transparent)
+            setTransparent = true;
+        if (opaque) {
+            setTransparent = false;
+        }
+
+        enableOutlining = highlight; 
 
         // Time is in seconds. Rotate with rpm.
         const float rpm = 4.0f;
@@ -60,9 +67,11 @@ public:
         vec3 translationIncrementFront = vec3(0.0f, 0.0f, 0.001f);
         vec3 translationIncrementRight = vec3(0.001f, 0.0f, 0.0f);
 
+        // camera movement
         camRotDown = camRotDown - (rotUp ? angleIncrement : 0) + (rotDown ? angleIncrement : 0);
         camRotLeft = camRotLeft + (rotLeft ? angleIncrement : 0) - (rotRight ? angleIncrement : 0);
 
+        // model movement
         transFront = transFront + (moveFront ? translationIncrementFront : vec3(0.0f, 0.0f, 0.0f)) - (moveBack ? translationIncrementFront : vec3(0.0f, 0.0f, 0.0f));
         transRight = transRight + (moveRight ? translationIncrementRight : vec3(0.0f, 0.0f, 0.0f)) - (moveLeft ? translationIncrementRight : vec3(0.0f, 0.0f, 0.0f));
     }

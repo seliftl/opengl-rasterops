@@ -31,8 +31,6 @@ private:
 
     Cube cube;
 
-    float angle, tPrev, rotSpeed;
-
     void setMatrices();
     void compileAndLinkShader();
     void drawScene();

@@ -24,7 +24,7 @@
     <ClCompile Include="glslprogram.cpp" />
     <ClCompile Include="glutils.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="scenealphatest.cpp" />
+    <ClCompile Include="scenetransparentdepthtest.cpp" />
     <ClCompile Include="sceneobjectoutlining.cpp" />
     <ClCompile Include="scenedepthtest.cpp" />
     <ClCompile Include="sceneoit.cpp" />
@@ -32,13 +32,12 @@
     <ClCompile Include="trianglemesh.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader\alphatest.frag.glsl" />
-    <None Include="shader\alphatest.vert.glsl" />
-    <None Include="shader\alt_alphatest.frag.glsl" />
+    <None Include="shader\transparentdepth.frag.glsl" />
+    <None Include="shader\transparentdepth.vert.glsl" />
     <None Include="shader\oit.fs" />
     <None Include="shader\oit.vs" />
-    <None Include="shader\texture.frag.glsl" />
-    <None Include="shader\texture.vert.glsl" />
+    <None Include="shader\basic.frag.glsl" />
+    <None Include="shader\basic.vert.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

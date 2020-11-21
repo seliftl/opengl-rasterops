@@ -1,4 +1,4 @@
-#include "scenealphatest.h"
+#include "scenetransparentdepthtest.h"
 #include "texture.h"
 
 #include <iostream>
@@ -10,10 +10,10 @@ using std::cerr;
 using glm::vec3;
 using glm::mat4;
 
-SceneAlphaTest::SceneAlphaTest() : angle(0.0f), tPrev(0.0f), rotSpeed(glm::pi<float>() / 2.0f), cube(1.0f)
+SceneTransparentDepthTest::SceneTransparentDepthTest() : cube(1.0f)
 { }
 
-void SceneAlphaTest::initScene()
+void SceneTransparentDepthTest::initScene()
 {
     compileAndLinkShader();
 
@@ -21,77 +21,73 @@ void SceneAlphaTest::initScene()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
     projection = mat4(1.0f);
 
 	prog.setUniform("Light.L", vec3(1.0f));
 	prog.setUniform("Light.La", vec3(0.2f) );
 
-    // Load texture files
-	GLuint cement = Texture::loadTexture("../media/texture/cement.jpg");
-	GLuint moss = Texture::loadTexture("../media/texture/window.png");
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, cement);
+    // Load transparent texture file
+	GLuint window = Texture::loadTexture("../media/texture/window.png");
 
     glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, moss);
+	glBindTexture(GL_TEXTURE_2D, window);
 
 #ifdef __APPLE__
   prog.setUniform("BaseTex", 0);
   prog.setUniform("AlphaTex", 1);
 #endif
-
 }
 
-void SceneAlphaTest::update( float t )
-{
-    float deltaT = t - tPrev;
-    if(tPrev == 0.0f) deltaT = 0.0f;
-    tPrev = t;
+void SceneTransparentDepthTest::update( float t ) {}
 
-    if( this->m_animate ) {
-	angle += rotSpeed * deltaT;
-	if (angle > glm::two_pi<float>()) angle -= glm::two_pi<float>();
-    }
-}
-
-void SceneAlphaTest::render()
+void SceneTransparentDepthTest::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // camera movement
     view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
     view = glm::rotate(view, camRotDown, glm::vec3(-1.0f, 0.0f, 0.0f));
     view = glm::rotate(view, camRotLeft, glm::vec3(0.0f, 1.0f, 0.0f));
 
+    // model 1
     prog.setUniform("Light.Position", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    prog.setUniform("Material.Ks", 0.0f, 0.0f, 0.0f);
-    prog.setUniform("Material.Ka", 1.0f, 0.0f, 0.0f);
+    prog.setUniform("Material.Kd", 0.8f, 0.21424f, 0.27568f);
+    prog.setUniform("Material.Ka", 0.8f, 0.1745f, 0.215f);
+    prog.setUniform("Material.Ks", 0.5f, 0.05f, 0.05f);
     prog.setUniform("Material.Shininess", 1.0f);
-    prog.setUniform("textureRendering", 1);
+
+    // check transparency
+    if (setTransparent)
+        prog.setUniform("textureRendering", 1);
+    else
+        prog.setUniform("textureRendering", 0);
 
     model = mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
-    setMatrices();
-    cube.render();
 
-    prog.setUniform("Light.Position", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    prog.setUniform("Material.Kd", 0.0f, 0.21424f, 0.27568f);
-    prog.setUniform("Material.Ka", 0.0f, 0.1745f, 0.215f);
-    prog.setUniform("Material.Ks", 0.0f, 0.05f, 0.05f);
-    prog.setUniform("Material.Shininess", 1.0f);
-    prog.setUniform("textureRendering", 0);
-
-    model = mat4(1.0f);
-    model = glm::translate(model, vec3(-0.3f, 0.2f, -2.0f));
+    // model movement
     model = glm::translate(model, transFront);
     model = glm::translate(model, transRight);
     model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
     setMatrices();
     cube.render();
+
+    // model 2
+    prog.setUniform("Light.Position", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    prog.setUniform("Material.Kd", 0.0f, 0.21424f, 0.27568f);
+    prog.setUniform("Material.Ka", 0.0f, 0.1745f, 0.215f);
+    prog.setUniform("Material.Ks", 0.0f, 0.05f, 0.05f);
+    prog.setUniform("Material.Shininess", 1.0f);
+
+    // set opaque 
+    prog.setUniform("textureRendering", 0);
+
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(-0.3f, 0.2f, -2.0f));
+    setMatrices();
+    cube.render();
 }
 
-void SceneAlphaTest::setMatrices()
+void SceneTransparentDepthTest::setMatrices()
 {
     mat4 mv = view * model;
     prog.setUniform("ModelViewMatrix", mv);
@@ -100,7 +96,7 @@ void SceneAlphaTest::setMatrices()
     prog.setUniform("MVP", projection * mv);
 }
 
-void SceneAlphaTest::resize(int w, int h, float fov)
+void SceneTransparentDepthTest::resize(int w, int h, float fov)
 {
     glViewport(0,0,w,h);
     width = w;
@@ -108,15 +104,14 @@ void SceneAlphaTest::resize(int w, int h, float fov)
     projection = glm::perspective(glm::radians(60.0f), (float)w/h, 0.3f, 100.0f);
 }
 
-void SceneAlphaTest::compileAndLinkShader()
+void SceneTransparentDepthTest::compileAndLinkShader()
 {
   try {
 #ifdef __APPLE__
-    prog.compileShader("shader/alphatest_41.vs");
-    prog.compileShader("shader/alphatest_41.fs");
+
 #else
-    prog.compileShader("shader/alphatest.vert.glsl");
-    prog.compileShader("shader/alphatest.frag.glsl");
+    prog.compileShader("shader/transparentdepth.vert.glsl");
+    prog.compileShader("shader/transparentdepth.frag.glsl");
 #endif
     prog.link();
     prog.use();
