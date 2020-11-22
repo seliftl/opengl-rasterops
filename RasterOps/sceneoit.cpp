@@ -80,7 +80,7 @@ void SceneOit::pass1() {
 }
 
 void SceneOit::pass2() {
-    // ensure that dáta is written to buffers
+    // ensure that data is written to buffers
   glMemoryBarrier( GL_SHADER_STORAGE_BARRIER_BIT );
 
   glUniformSubroutinesuiv( GL_FRAGMENT_SHADER, 1, &pass2Index);

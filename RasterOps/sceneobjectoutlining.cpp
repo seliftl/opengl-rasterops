@@ -68,6 +68,8 @@ void SceneObjectOutlining::render()
         prog.setUniform("Material.Shininess", 1.0f);
 
         model = mat4(1.0f);
+
+        // scale up cube
         model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
 
         setMatrices();
