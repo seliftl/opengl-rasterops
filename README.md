@@ -6,4 +6,4 @@ Keyboard Guide:
 - WASD Keys: Move object
 - T: Set object transparent (in scenetransparentdepthtest)
 - O: Set object opaque (in scenetransparentdepthtest)
-- H: Highlight/Outline Object (in sceneobjectoutlining)
+- H: Highlight/outline object (in sceneobjectoutlining)
