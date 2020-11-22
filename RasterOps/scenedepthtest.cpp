@@ -16,9 +16,9 @@ void SceneDepthTest::initScene()
 {
     compileAndLinkShader();
 
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
     //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glBlendFunc(GL_ONE, GL_ONE);
 
     view = glm::lookAt(vec3(0.0f, 1.25f, 1.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
@@ -40,6 +40,16 @@ void SceneDepthTest::update(float t) {}
 void SceneDepthTest::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if (enableDepthTest)
+        glEnable(GL_DEPTH_TEST);
+    else
+        glDisable(GL_DEPTH_TEST);
+
+    if(enableBlending)
+        glEnable(GL_BLEND);
+    else 
+        glDisable(GL_BLEND);
 
     // camera movement
     view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));

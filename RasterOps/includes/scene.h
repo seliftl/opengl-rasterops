@@ -23,6 +23,8 @@ protected:
 
     bool enableOutlining;
     bool setTransparent;
+    bool enableDepthTest = true;
+    bool enableBlending;
 
 public:
     int width;
@@ -47,16 +49,30 @@ public:
       */
     virtual void update( float t ) = 0;
 
-    virtual void update(float t, bool rotLeft, bool rotRight, bool rotUp, bool rotDown, bool moveLeft, bool moveRight, bool moveFront, bool moveBack, bool opaque, bool transparent, bool highlight)
+    virtual void update(float t, bool rotLeft, bool rotRight, bool rotUp, bool rotDown, bool moveLeft, bool moveRight, bool moveFront, bool moveBack, bool outlining, bool transparent, bool depthTest, bool blending, bool reset)
     {
         // check if outlining is enabled
         if (transparent)
             setTransparent = true;
-        if (opaque) {
+
+        if (outlining)
+            enableOutlining = true;
+
+        if (depthTest)
+            enableDepthTest = true;
+
+        if (blending)
+            enableBlending = true;
+
+        //reset all
+        if (reset) {
             setTransparent = false;
+            enableOutlining = false;
+            enableDepthTest = false;
+            enableBlending = false;
         }
 
-        enableOutlining = highlight; 
+         
 
         // Time is in seconds. Rotate with rpm.
         const float rpm = 4.0f;
