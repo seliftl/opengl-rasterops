@@ -54,7 +54,7 @@ Cube::Cube( GLfloat side )
     //Addition for blending
     std::vector<GLfloat> alpha = {
         // Front
-        0.5f, 0.0f, 0.8f, 0.8f,
+        0.5f, 0.0f, 0.0f, 0.0f,
         // Right
         0.5f, 0.0f, 0.0f, 0.0f,
         // Back
@@ -64,7 +64,7 @@ Cube::Cube( GLfloat side )
         // Bottom
         0.5f, 0.0f, 0.0f, 0.0f,
         // Top
-        0.5f, 0.8f, 0.8f, 0.8f,
+        0.5f, 0.0f, 0.0f, 0.0f,
     };
 
     std::vector<GLuint> el = {
